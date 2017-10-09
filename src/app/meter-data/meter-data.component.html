@@ -1,0 +1,113 @@
+<section class="main-container">
+  <form name="dataForm">
+    <h1>{{meterReadings?.name}}</h1>
+
+    <div *ngIf="meterReadings?.locations" class="indent-block">
+      <h3><span class="icon" (click)="iconClicked($event)" id="hideLocations" [class.closed]="isCollapsed['hideLocations']"></span> Locations </h3>
+
+      <div class="indent-block">
+        <div [hidden]="isCollapsed['hideLocations']" *ngFor="let mainLocation of meterReadings?.locations; let i = index" [class.in-edit-mode]="inEditMode['location_edit_mode_'+i]">
+          <p>
+            <span class="icon" (click)="iconClicked($event)" id="mainLocation_{{i}}" [class.closed]="isCollapsed['mainLocation_'+i]"></span>
+            {{mainLocation.name}}
+            <small (click)="toggleEditMode($event)" id="location_edit_mode_{{i}}" class="text-muted text-uppercase edit-link">Toggle edit</small>
+          </p>
+          <div class="form-row col-10" [hidden]="!inEditMode['location_edit_mode_'+i]">
+            <label for="location_{{i}}"></label>
+            <input type="text" id="location_{{i}}" name="{{mainLocation.name}}" [(ngModel)]="mainLocation.name" class="form-control form-control-sm">
+          </div>
+
+          <div class="indent-block" [hidden]="isCollapsed['mainLocation_'+i]">
+            <div *ngIf="mainLocation?.locations?.length > 0">
+              <p><span class="icon" (click)="iconClicked($event)" id="subLocations_{{i}}" [class.closed]="isCollapsed['subLocations_'+i]"></span> Sub Locations</p>
+
+              <div *ngFor="let subLocation of mainLocation.locations; let j = index" [hidden]="isCollapsed['subLocations_'+i]" class="indent-block" [class.in-edit-mode]="inEditMode['sublocation_edit_mode_'+i+'_'+j]">
+                <p>
+                  <span class="icon" (click)="iconClicked($event)" id="subLocation_{{i}}_{{j}}" [class.closed]="isCollapsed['subLocation_'+i+'_'+j]"></span>
+                  {{subLocation.name}}
+                  <small (click)="toggleEditMode($event)" id="sublocation_edit_mode_{{i}}_{{j}}" class="text-muted text-uppercase edit-link">Toggle edit</small>
+                </p>
+                <div class="form-row col-10" [hidden]="!inEditMode['sublocation_edit_mode_'+i+'_'+j]">
+                  <label for="subLocation_{{j}}"></label>
+                  <input type="text" id="subLocation_{{j}}" name="{{subLocation.name}}" [(ngModel)]="subLocation.name" class="form-control form-control-sm">
+                </div>
+
+                <div *ngFor="let subMeter of subLocation.meters" [hidden]="isCollapsed['subLocation_'+i+'_'+j]" class="indent-block">
+
+                  <p>
+                    <img src="../../assets/images/{{subMeter.meterType | lowercase}}.svg"> {{subMeter.name}}
+                    // <span class="text-info"><small class="text-uppercase text-muted">Supplier ID:</small> {{subMeter.supplierId}}</span>
+                  </p>
+
+                  <div class="form-row col-10" [hidden]="!inEditMode['sublocation_edit_mode_'+i+'_'+j]">
+                    <div class="col-4">
+                      <label for="submeter_type_{{i}}" class="sr-only">Meter Type</label>
+                      <input type="text" id="submeter_type_{{i}}" name="{{subMeter.meterType}}" [(ngModel)]="subMeter.meterType" class="form-control form-control-sm">
+                    </div>
+                    <div class="col">
+                      <label for="submeter_name_{{i}}" class="sr-only">Meter Type</label>
+                      <input type="text" id="submeter_name_{{i}}" name="{{subMeter.name}}" [(ngModel)]="subMeter.name" class="form-control form-control-sm">
+                    </div>
+                    <div class="col-2" *ngIf="subMeter.supplierId">
+                      <label for="submeter_supplierId_{{i}}" class="sr-only">Meter Type</label>
+                      <input type="text" id="submeter_supplierId_{{i}}" name="{{subMeter.supplierId}}" [(ngModel)]="subMeter.supplierId" class="form-control form-control-sm">
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+
+            <div *ngIf="mainLocation?.meters?.length > 0">
+              <p>
+                <span class="icon" (click)="iconClicked($event)" id="subMeters_{{i}}" [class.closed]="isCollapsed['subMeters_'+i]"></span>
+                Sub Meters
+                <small (click)="toggleEditMode($event)" id="submeter_edit_mode_{{i}}" class="text-muted text-uppercase edit-link">Toggle edit</small></p>
+
+              <div *ngFor="let meter of mainLocation.meters" [hidden]="isCollapsed['subMeters_'+i]" class="indent-block" [class.in-edit-mode]="inEditMode['submeter_edit_mode_'+i]">
+                <p>
+                  <img src="../../assets/images/{{meter.meterType | lowercase}}.svg"> {{meter.name}}
+                  <span *ngIf="meter.supplierId"> // <span class="text-info"> <small class="text-uppercase text-muted">Supplier ID:</small> {{meter.supplierId}}</span></span>
+                </p>
+
+                <div class="form-row col-10" [hidden]="!inEditMode['submeter_edit_mode_'+i]">
+                  <div class="col-4">
+                    <label for="meter_type_{{i}}" class="sr-only">Meter Type</label>
+                    <input type="text" id="meter_type_{{i}}" name="{{meter.meterType}}" [(ngModel)]="meter.meterType" class="form-control form-control-sm">
+                  </div>
+                  <div class="col">
+                    <label for="meter_name_{{i}}" class="sr-only">Meter Type</label>
+                    <input type="text" id="meter_name_{{i}}" name="{{meter.name}}" [(ngModel)]="meter.name" class="form-control form-control-sm">
+                  </div>
+                  <div class="col-2" *ngIf="meter.supplierId">
+                    <label for="meter_supplierId_{{i}}" class="sr-only">Meter Type</label>
+                    <input type="text" id="meter_supplierId_{{i}}" name="{{meter.supplierId}}" [(ngModel)]="meter.supplierId" class="form-control form-control-sm">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="meterReadings?.meters" class="indent-block">
+      <h2>
+        <span class="icon" (click)="iconClicked($event)" id="hideMeters" [class.closed]="isCollapsed['hideMeters']"></span>
+        Meters
+        <small (click)="toggleEditMode($event)" id="main_meters_edit_mode" class="text-muted text-uppercase edit-link">Toggle edit</small>
+      </h2>
+
+      <div [hidden]="isCollapsed['hideMeters']" *ngFor="let meter of meterReadings?.meters; let m = index;" class="indent-block" [class.in-edit-mode]="inEditMode['main_meters_edit_mode']">
+        <p>
+          <img src="../../assets/images/{{meter.meterType | lowercase}}.svg"> {{meter.name}}
+        </p>
+        <div class="form-row col-10" [hidden]="!inEditMode['main_meters_edit_mode']">
+          <label for="main_meter_{{m}}"></label>
+          <input type="text" id="main_meter_{{m}}" name="{{meter.name}}" [(ngModel)]="meter.name" class="form-control form-control-sm">
+        </div>
+      </div>
+    </div>
+  </form>
+</section>

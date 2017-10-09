@@ -1,0 +1,34 @@
+.main-container {
+  .indent-block {
+    margin-left: 2rem;
+  }
+  img {
+    width: 1.5rem;
+  }
+  .icon {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    background: url("assets/images/collapse.svg") no-repeat 0 0;
+    background-size: cover;
+    cursor: pointer;
+
+    &.closed {
+      background-image: url("assets/images/expand.svg");
+    }
+  }
+  .edit-link {
+    padding-left: 3rem;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+
+  .in-edit-mode {
+    .form-row {
+      margin-top: -1rem;
+    }
+    p {
+      margin-top: 1rem;
+    }
+  }
+}
